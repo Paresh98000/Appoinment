@@ -1,0 +1,163 @@
+
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block otherpage %}
+
+<head>
+    
+    <title>Manage Appointment</title>
+    
+    <link type="text/css" rel="stylesheet" href="{% static 'pages/clientprovidercontentstyle.css' %}" />
+
+    <style>
+    
+        .box:hover{
+            cursor:pointer;
+        }
+
+        h2{
+            font-size: 20px;
+        }
+
+        h4{
+            font-size: 15px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+    
+    <div class="container-fluid" >
+
+            
+
+            <div class="row"><h1>Current</h1></div>
+            <div class="row">
+                    {% if isleft %}
+
+            {% for a in appointment_left %}
+            
+            <div class="col-sm-3" style="overflow:scroll; background: linear-gradient(darkblue,black); margin:10px;" onclick="window.location('/client/appointment/edit/{{a.id}}')">
+                
+                <a href="{% url 'editapp' a.id %}">
+                    <span>{% if a.status == 'Pending' %} <font color="yellow">- {{a.status}} -</font> {% elif a.status == 'Rejected' %} <font color="Red">- {{a.status}} -</font> {% else %}<font color="lightblue"> - {{a.status}} - </font> {% endif %}  </span>
+                    
+                    <h2 align='center' >{{a.serviceid.title}} 
+                        <span > :- </span>
+                    <span >{{a.time}} {{a.date}}</span>
+                    
+                    </h2>
+                    
+                    <hr />
+                    
+                    <div >
+                            <h4 align="center" ><span style='color: lightblue;'>Open Till :- </span>  {{a.serviceid.time_end_h}}:{{a.serviceid.time_end_m}} <span style='color: lightblue;'> | Active Days :- </span> {{a.serviceid.day}} <br /> <span style='color: lightblue;'>Address :- </span> {{a.serviceid.location}} <br /> <span style='color: lightblue;'> City :- </span> {{a.serviceid.city}} <br /> <span style='color: lightblue;'> Phone :-</span> {{a.serviceid.phone_no}} <span style='color: lightblue;'>  | type :- </span> {{a.serviceid.stype}} </h4>
+                            <h4 style="display:inline;flaot:left;">Cost: <span style="color: green;">{{a.serviceid.cost}}</span> <span style="color:white;"> | </span> </h4>
+                            <h4 style="display:inline; flaot:right;"> Payment: {% if a.payment_status == 'Not Paid' %} <span style="color: lightblue;">Not paid yet</span> {% else %} <span style="color: blue;">Done</span> {% endif %}  {% if a.payment_status == "Not Paid" and a.status == "Approved" %} <a href="/order?id={{a.id}}"><button style="float:right; font-size:18px; padding:3px; color:blue; font-weight: bold; width:60px; border-radius: 10px;">Pay</button></a> {% endif %} </h4>
+                                        
+                    </div>
+                    
+                </a>
+<br/>
+                <span  ><a  href="{% url 'editapp' a.id %}">Edit</a> |
+                    <a  href="{% url 'delapp' a.id %}">Delete</a>
+                    
+                </span>
+
+            </div>
+            
+            {% endfor %}
+
+            {% else %}
+        <div class="box col-sm-3" >
+            
+           
+                <span style="float:right; margin-right:20px; margin-top: 5px;">{% if a.status == 'Pending' %} <font color="yellow">- {{a.status}} -</font> {% elif a.status == 'Rejected' %} <font color="Red">- {{a.status}} -</font> {% else %}<font color="lightblue"> - {{a.status}} - </font> {% endif %}  </span>
+                
+                <h2 align='center' style="margin-bottom:0;">No Appointments 
+                    
+                </h2>
+                
+               
+        </div>
+        {% endif %}
+            
+        </div>
+
+        
+            
+        </div>
+        <div class="row"><h1 class="col-sm-3">Previous</h1></div>
+        {% if isgone %}
+        <div class="row">
+        
+            {% for a in appointment_gone %}
+            
+            <div class="col-sm-3" style="background: linear-gradient(darkblue,black); margin:10px;" onclick="window.location('/client/appointment/edit/{{a.id}}')">
+                
+                <a href="{% url 'editapp' a.id %}">
+                    <span>{% if a.status == 'Pending' %} <font color="yellow">- {{a.status}} -</font> {% elif a.status == 'Rejected' %} <font color="Red">- {{a.status}} -</font> {% else %}<font color="lightblue"> - {{a.status}} - </font> {% endif %}  </span>
+                    
+                    <h2 align='center' >{{a.serviceid.title}} 
+                        <span > :- </span>
+                    <span >{{a.time}} {{a.date}}</span>
+                    
+                    </h2>
+                    
+                    <hr />
+                    
+                    <div>
+                            <h4 align="center" ><span style='color: lightblue;'>Open Till :- </span>  {{a.serviceid.time_end_h}}:{{a.serviceid.time_end_m}} <span style='color: lightblue;'> | Active Days :- </span> {{a.serviceid.day}} <br /> <span style='color: lightblue;'>Address :- </span> {{a.serviceid.location}} <br /> <span style='color: lightblue;'> City :- </span> {{a.serviceid.city}} <br /> <span style='color: lightblue;'> Phone :-</span> {{a.serviceid.phone_no}} <span style='color: lightblue;'>  | type :- </span> {{a.serviceid.stype}} </h4>
+                            <h4 style="display:inline;flaot:left;">Cost: <span style="color: green;">{{a.serviceid.cost}}</span> <span style="color:white;"> | </span> </h4>
+                            <h4 style="display:inline; flaot:right;">Payment: {% if a.payment_status == 'Not Paid' %} <span style="color: green;">{{a.payment_status}}</span> {% else %} <span style="color: blue;">{{a.payment_status}}</span> {% endif %} </h4>               
+                            
+                    </div>
+                    
+                </a>
+                
+                <br/>
+
+                <span  ><a  href="{% url 'editapp' a.id %}">Edit</a> |
+                    <a  href="{% url 'delapp' a.id %}">Delete</a>
+                    <span class="input-group">
+                            <span class="input-group-addon">Text</span>
+                            <input id="msg" type="text" class="form-control" name="msg" placeholder="Additional Info">
+                    </span>
+                </span>
+                
+            </div>
+            
+            
+
+            {% endfor %}
+            
+            
+
+        </div>
+
+        {% else %}
+
+            <div class="box col-sm-3" >
+                
+                
+                    <span style="float:right; margin-right:20px; margin-top: 5px;">{% if a.status == 'Pending' %} <font color="yellow">- {{a.status}} -</font> {% elif a.status == 'Rejected' %} <font color="Red">- {{a.status}} -</font> {% else %}<font color="lightblue"> - {{a.status}} - </font> {% endif %}  </span>
+                    
+                    <h2 align='center' style="margin-bottom:0;">No Appointments 
+                        
+                    </h2>
+                    
+                   
+            </div>
+
+            {% endif %}
+
+            
+    </div>
+    
+</body>
+
+{% endblock %}
